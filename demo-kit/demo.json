@@ -1,0 +1,7 @@
+{
+  "name": "Stirling PDF",
+  "default_port": "3104",
+  "health_path": "/api/v1/info/status",
+  "health_contains": "UP",
+  "secret_keys": []
+}
