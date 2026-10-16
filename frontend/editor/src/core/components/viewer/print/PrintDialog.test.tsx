@@ -247,6 +247,35 @@ describe("PrintDialog", () => {
     expect(line?.textContent).toContain("viewer.print.pageCount");
   });
 
+  it("steps the page from the strip with the arrow keys", () => {
+    renderDialog({ pageCount: 5 });
+
+    fireEvent.change(rangeField(), { target: { value: "1-3" } });
+
+    const next = screen.getByLabelText("viewer.print.nextPage");
+
+    expect(next).toBeDisabled();
+
+    fireEvent.keyDown(next, { key: "ArrowLeft" });
+
+    expect(next).not.toBeDisabled();
+
+    fireEvent.keyDown(next, { key: "ArrowRight" });
+
+    expect(next).toBeDisabled();
+  });
+
+  it("returns every setting to its default", () => {
+    const { onPrint } = renderDialog({ pageCount: 12 });
+
+    fireEvent.change(rangeField(), { target: { value: "2-4" } });
+    fireEvent.click(screen.getByText("viewer.print.presetBooklet"));
+    fireEvent.click(screen.getByText("viewer.print.reset"));
+    fireEvent.click(confirm());
+
+    expect(onPrint).toHaveBeenCalledWith(defaultPrintSettings());
+  });
+
   it("announces the job summary and the output position", () => {
     renderDialog({ pageCount: 12 });
 

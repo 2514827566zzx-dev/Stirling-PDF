@@ -5,6 +5,7 @@ import {
   useMemo,
   useState,
   type CSSProperties,
+  type KeyboardEvent,
   type ReactNode,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -1236,6 +1237,28 @@ export function PrintDialog({
     selected.length < pageCount;
   const clipped = rangeIsClipped(settings.pageRange, pageCount);
 
+  // The strip's buttons are the only focusable parts of it, so arrow presses
+  // arrive here from either one.
+  const stepPager = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+      return;
+    }
+
+    const next = shownStep + (event.key === "ArrowLeft" ? -1 : 1);
+    if (next < 1 || next > steps) {
+      return;
+    }
+
+    event.preventDefault();
+    setStep(next);
+  };
+
+  const resetSettings = () => {
+    setSettings(defaultPrintSettings());
+    setPageScope("all");
+    setStep(0);
+  };
+
   // The figure column renders twice: once in the dialog and, larger, in the
   // overlay the Enlarge action opens. The overlay's title names the figure it
   // holds, so only the dialog copy heads it, and only the dialog copy offers
@@ -1256,7 +1279,12 @@ export function PrintDialog({
         inDialog,
       )}
       {pager ? (
-        <Group gap={0} justify="center" className="print-preview__pager">
+        <Group
+          gap={0}
+          justify="center"
+          className="print-preview__pager"
+          onKeyDown={stepPager}
+        >
           <Button
             variant="quiet"
             size="sm"
@@ -1451,9 +1479,19 @@ export function PrintDialog({
 
         <div className="print-body__controls">
           <Stack gap="md">
-            <Text className="print-column__title">
-              {t("viewer.print.settingsLabel")}
-            </Text>
+            <Group justify="space-between" align="center">
+              <Text className="print-column__title">
+                {t("viewer.print.settingsLabel")}
+              </Text>
+              <Button
+                variant="quiet"
+                size="sm"
+                onClick={resetSettings}
+                disabled={busy}
+              >
+                {t("viewer.print.reset")}
+              </Button>
+            </Group>
             {scopeNote && pageCount > 0 ? (
               <Text size="xs" c="dimmed">
                 {t(scopeNote, { count: pageCount })}
