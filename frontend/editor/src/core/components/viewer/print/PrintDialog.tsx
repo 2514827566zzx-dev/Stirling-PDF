@@ -182,7 +182,7 @@ function OptionsToggle({
 
 /** The settings a collapsed panel is hiding, so a clean form still shows its state. */
 const optionSummary = (...facts: (string | null)[]) =>
-  facts.filter((fact) => fact !== null).join(" · ");
+  facts.filter((fact) => fact !== null).join(", ");
 
 /** A cell's share of its sheet, which is how both figures place themselves. */
 const share = (value: number, total: number) => `${(value / total) * 100}%`;
@@ -1382,19 +1382,19 @@ export function PrintDialog({
       ariaLabel={t("viewer.print.title")}
       footer={
         <Group
-          justify={isPhone ? "flex-end" : "space-between"}
+          justify={permissionProblem && !isPhone ? "space-between" : "flex-end"}
           gap="sm"
           wrap="wrap"
         >
           {
-            // The handoff is why the dialog is not the printer's own, so it is
-            // said on every viewport rather than only where it fits beside the
-            // buttons. A document that forbids printing has no handoff to
-            // describe, so its reason takes the line instead.
+            // The button names the next step, so only a refused document has
+            // something to read here.
           }
-          <Text size="xs" c="dimmed" className="print-handoff">
-            {permissionProblem ?? t("viewer.print.handoff")}
-          </Text>
+          {permissionProblem ? (
+            <Text size="xs" c="dimmed" className="print-handoff">
+              {permissionProblem}
+            </Text>
+          ) : null}
           <Group gap="sm">
             <Button variant="tertiary" onClick={onClose}>
               {t("common.cancel")}
@@ -1427,7 +1427,7 @@ export function PrintDialog({
                 <span className="print-document__name">{fileName}</span>
               ) : null}
               {fileName && pageCount > 0 ? (
-                <span className="print-document__meta"> · </span>
+                <span className="print-document__meta">, </span>
               ) : null}
               {pageCount > 0 ? (
                 <span className="print-document__meta">
@@ -1494,7 +1494,7 @@ export function PrintDialog({
             </Group>
             {scopeNote && pageCount > 0 ? (
               <Text size="xs" c="dimmed">
-                {t(scopeNote, { count: pageCount })}
+                {t(scopeNote)}
               </Text>
             ) : null}
             {fields()}
