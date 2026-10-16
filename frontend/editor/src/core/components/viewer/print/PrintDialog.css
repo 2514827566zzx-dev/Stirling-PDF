@@ -419,6 +419,12 @@
     flex: 1 1 100%;
     text-align: right;
   }
+
+  /* The stage is nearly the whole width here, so the page takes it: the size the
+     desktop column is drawn for leaves the preview too small to read. */
+  .print-body {
+    --print-figure-w: 15rem;
+  }
 }
 
 /* The enlarged preview: the same figure at the width a detail check needs. */

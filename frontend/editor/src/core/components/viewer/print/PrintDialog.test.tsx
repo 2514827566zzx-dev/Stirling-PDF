@@ -247,6 +247,19 @@ describe("PrintDialog", () => {
     expect(line?.textContent).toContain("viewer.print.pageCount");
   });
 
+  it("announces the job summary and the output position", () => {
+    renderDialog({ pageCount: 12 });
+
+    fireEvent.click(screen.getByText("viewer.print.presetBooklet"));
+
+    const summary = document.querySelector(".print-preview__output");
+    const position = document.querySelector(".print-preview__pager-label");
+
+    expect(summary?.getAttribute("role")).toBe("status");
+    expect(summary?.textContent?.length).toBeGreaterThan(0);
+    expect(position?.getAttribute("role")).toBe("status");
+  });
+
   it("keeps both settings when a booklet output mode changes them", () => {
     const { onPrint } = renderDialog({ pageCount: 12 });
 

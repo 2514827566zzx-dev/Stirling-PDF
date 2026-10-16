@@ -1266,7 +1266,7 @@ export function PrintDialog({
           >
             <Icon name="chevron-left" />
           </Button>
-          <Text c="dimmed" className="print-preview__pager-label">
+          <Text c="dimmed" className="print-preview__pager-label" role="status">
             {t(pager.label, pager.values)}
           </Text>
           <Button
@@ -1288,7 +1288,7 @@ export function PrintDialog({
         </Text>
       ) : null}
       {showsSelection || summary ? (
-        <div className="print-preview__output">
+        <div className="print-preview__output" role="status">
           {showsSelection ? (
             <Text size="xs" c="dimmed" className="print-preview__summary">
               {clipped
