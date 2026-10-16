@@ -348,6 +348,14 @@
   border-radius: var(--radius-pill);
 }
 
+/* One control seen from each end: the disabled arrow keeps the bare glyph the
+   enabled one draws instead of the grey chip every disabled button gets, so the
+   pair cannot read as two different designs. */
+.print-preview__pager .sui-btn.mantine-Button-root:disabled,
+.print-preview__pager .sui-btn.mantine-Button-root[data-disabled] {
+  background: transparent !important;
+}
+
 .print-preview__pager-label {
   min-width: 7rem;
   font-size: 0.8125rem;
